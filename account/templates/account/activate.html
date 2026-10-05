@@ -1,0 +1,7 @@
+Hi {{ user.username }},
+
+Please click the link below to activate your account:
+
+https://{{ domain }}{% url 'account:activate' uidb64=uid token=token %}
+
+If you didn’t create this account, ignore this email.

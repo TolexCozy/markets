@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resend Activation PIN</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .messages {
+            margin-bottom: 15px;
+        }
+        .messages p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .links {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        @media only screen and (max-width: 600px) {
+            .container {
+                width: 90%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Resend Activation PIN</h2>
+        <p style="color: #666; font-size: 14px; margin-bottom: 20px;">
+            Enter your email address below to receive a new 6-digit PIN.
+        </p>
+
+        <div class="messages">
+            {% for message in messages %}
+                <p style="color: {% if message.tags == 'error' %}#d9534f{% elif message.tags == 'success' %}#5cb85c{% else %}#0275d8{% endif %}; font-weight: bold;">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        </div>
+
+        <form method="post" action="{% url 'account:resend-activation' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <!-- Pre-fills automatically if passed in request/context -->
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    value="{{ email }}" 
+                    placeholder="e.g. user@example.com" 
+                    required
+                >
+            </div>
+            <button type="submit">Send New 6-Digit PIN</button>
+        </form>
+
+        <div class="links">
+            Have a PIN already? <a href="{% url 'account:verify-pin' %}{% if email %}?email={{ email }}{% endif %}" id="verify-pin-link">Verify PIN</a><br>
+            Back to <a href="{% url 'account:handlelogin' %}">Login</a>
+        </div>
+    </div>
+
+    <script>
+        // Dynamically append typed email to the Verify PIN link
+        const emailInput = document.getElementById('email');
+        const verifyPinLink = document.getElementById('verify-pin-link');
+        const baseVerifyUrl = "{% url 'account:verify-pin' %}";
+
+        emailInput.addEventListener('input', function() {
+            const emailValue = encodeURIComponent(this.value.trim());
+            if (emailValue) {
+                verifyPinLink.href = `${baseVerifyUrl}?email=${emailValue}`;
+            } else {
+                verifyPinLink.href = baseVerifyUrl;
+            }
+        });
+    </script>
+</body>
+</html>

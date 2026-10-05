@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Activation Failed{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="alert alert-danger">
+                <h2 class="alert-heading">Activation Failed</h2>
+                <p>The activation link is invalid or has expired.</p>
+            </div>
+            <hr>
+            <p>Don't worry! You can try signing up again or contact support if the issue persists.</p>
+            <a href="{% url 'account:signup' %}" class="btn btn-primary">Try Signing Up Again</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,152 @@
+{% extends "base.html" %} {% load static %} {% block title %}{{ product.name }}
+- Shop~LIFT{% endblock %} {% block body %}
+<style>
+  .gallery-main {
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 15px;
+  }
+
+  .gallery-main img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  .gallery-thumbnails {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+  }
+
+  .gallery-thumbnails::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .gallery-thumbnails::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  .gallery-thumbnails::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+
+  .gallery-thumbnails::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  .thumbnail {
+    min-width: 80px;
+    width: 80px;
+    height: 80px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    object-fit: cover;
+    transition: border-color 0.3s ease;
+  }
+
+  .thumbnail:hover,
+  .thumbnail.active {
+    border-color: #000;
+  }
+</style>
+
+<main class="main">
+  <section class="product-detail section py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        {% if product %}
+        <div class="col-lg-5 mb-4">
+          <!-- Main Image -->
+          <div class="gallery-main bg-white rounded shadow-sm overflow-hidden">
+            {% if product.image %}
+            <img
+              id="mainImage"
+              src="{{ product.image.url }}"
+              class="img-fluid"
+              alt="{{ product.name }}"
+            />
+            {% else %}
+            <div class="bg-secondary text-white rounded text-center py-5">
+              No image available
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Thumbnail Gallery -->
+          {% if product.sub_images.all %}
+          <div class="gallery-thumbnails">
+            <!-- Primary image thumbnail -->
+            {% if product.image %}
+            <img
+              src="{{ product.image.url }}"
+              class="thumbnail active"
+              alt="Primary"
+              onclick="document.getElementById('mainImage').src='{{ product.image.url }}'; document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active')); this.classList.add('active');"
+            />
+            {% endif %}
+
+            <!-- Sub images thumbnails -->
+            {% for sub_image in product.sub_images.all %}
+            <img
+              src="{{ sub_image.image.url }}"
+              class="thumbnail"
+              alt="Image"
+              onclick="document.getElementById('mainImage').src='{{ sub_image.image.url }}'; document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active')); this.classList.add('active');"
+            />
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="col-lg-6">
+          <div class="bg-white rounded shadow-sm p-4">
+            <h1 class="mb-3">{{ product.name }}</h1>
+            <p class="lead text-muted">{{ product.description }}</p>
+            <h3 class="text-success mb-4">₦{{ product.price }}</h3>
+            <form
+              action="{% url 'events:add_to_cart' product.id %}"
+              method="POST"
+              class="mb-3"
+            >
+              {% csrf_token %}
+              <div class="mb-3 w-25">
+                <label for="quantity" class="form-label">Quantity</label>
+                <input
+                  type="number"
+                  id="quantity"
+                  name="quantity"
+                  value="1"
+                  min="1"
+                  class="form-control"
+                />
+              </div>
+              <button type="submit" class="btn btn-dark">Add to Cart</button>
+              <a
+                href="{% url 'events:menu_view' %}"
+                class="btn btn-outline-secondary ms-2"
+                >Back to Menu</a
+              >
+            </form>
+          </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+          <div class="alert alert-warning">No product data found.</div>
+          <a
+            href="{% url 'events:menu_view' %}"
+            class="btn btn-outline-secondary"
+            >Back to Menu</a
+          >
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}

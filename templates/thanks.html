@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Thank You - Shop~LIFT{% endblock %}
+
+{% block body %}
+<main class="main">
+    <section class="section mt-5">
+        <div class="container text-center" data-aos="fade-up">
+            <div class="thank-you-wrapper p-5 shadow-sm rounded bg-white">
+                <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                <h1 class="mt-3">Thank You for Your Patronage, {{ user.first_name }}!</h1>
+                <p class="lead">Your order/booking was successful. We hope to see you again soon.</p>
+                
+                <hr class="my-4">
+
+                <div class="feedback-section mx-auto" style="max-width: 600px;">
+                    <h3>We value your opinion</h3>
+                    <p>How was your experience today? Leave a comment below.</p>
+                    
+                    <form action="{% url 'events:submit_feedback' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <textarea name="comment" class="form-control" rows="4" placeholder="Your feedback matters..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-dark px-5">Submit Feedback</button>
+                    </form>
+                </div>
+
+                <div class="mt-4">
+                    <a href="{% url 'events:base' %}" class="btn btn-outline-secondary">Return Home</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

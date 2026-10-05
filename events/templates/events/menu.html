@@ -1,0 +1,278 @@
+{% extends "base.html" %} {% load static %} {% block title %} Menu Selection -
+Shop~LIFT {% endblock title %} {% block body %}
+
+<style>
+  /* ================= ULTIMATE FIX: VISIBILITY + EQUAL HEIGHT ================= */
+
+  /* 1. FORCE VISIBILITY */
+  .menu-page .menu-grid,
+  .menu-page .menu-card,
+  .menu-page [data-aos] {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translate(0) scale(1) !important;
+    display: flex !important;
+    transition: none !important;
+  }
+
+  /* 2. GRID SYSTEM: Horizontal layout */
+  .menu-page .menu-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 40px;
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .menu-page .menu-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .menu-page .menu-grid {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+
+  /* 3. CARD LOGIC */
+  .menu-page .menu-card {
+    background: #fff !important;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    flex-direction: column;
+    border: 1px solid #eee;
+  }
+
+  .menu-page .menu-card:hover {
+    transform: translateY(-5px) !important;
+    transition: transform 0.3s ease !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  /* 4. IMAGE CONTAINER */
+  .menu-page .img-container {
+    width: 100%;
+    aspect-ratio: 1/1;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .menu-page .menu-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  /* 5. CONTENT ALIGNMENT */
+  .menu-page .menu-content {
+    padding: 12px;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .menu-page .menu-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #222 !important;
+    min-height: 38px;
+    margin-bottom: 5px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .menu-page .menu-price {
+    color: #198754 !important;
+    font-weight: 800;
+    margin-bottom: 10px;
+    font-size: 15px;
+  }
+
+  .menu-page .menu-btn {
+    margin-top: auto;
+    width: 100%;
+  }
+</style>
+
+<div class="menu-page container-fluid px-4 mt-5">
+  <h1 class="text-center mb-4 fw-bold text-white">Our Menu</h1>
+
+  <div
+    class="d-flex justify-content-center gap-3 mb-5 p-3 bg-white rounded shadow-sm sticky-top"
+    style="top: 70px; z-index: 1020"
+  >
+    <button type="button" id="meals-btn" class="btn btn-dark px-4 rounded-pill">
+      View Meals
+    </button>
+    <button
+      type="button"
+      id="drinks-btn"
+      class="btn btn-outline-dark px-4 rounded-pill"
+    >
+      View Drinks
+    </button>
+  </div>
+
+  <div id="meals-section">
+    {% if intercontinental or snacks or local_dishes %}
+    <h2 class="text-white border-bottom pb-2 mb-4">Meals</h2>
+
+    <!-- INTERCONTINENTAL -->
+    {% if intercontinental %}
+    <h4 class="text-white mt-4 mb-3">Intercontinental</h4>
+    <div class="menu-grid">
+      {% for dish in intercontinental %}
+      <div class="menu-card">
+        <div class="img-container">
+          <img
+            src="{% if dish.image %}{{ dish.image.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}"
+            class="menu-img"
+          />
+        </div>
+        <div class="menu-content">
+          <div class="menu-title">{{ dish.name }}</div>
+          <div class="menu-price">₦{{ dish.price }}</div>
+          <a
+            href="{% url 'events:product_detail' dish.id %}"
+            class="btn btn-dark btn-sm w-100"
+            >View</a
+          >
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- SNACKS -->
+    {% if snacks %}
+    <h4 class="text-white mt-4 mb-3">Snacks</h4>
+    <div class="menu-grid">
+      {% for dish in snacks %}
+      <div class="menu-card">
+        <div class="img-container">
+          <img
+            src="{% if dish.image %}{{ dish.image.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}"
+            class="menu-img"
+          />
+        </div>
+        <div class="menu-content">
+          <div class="menu-title">{{ dish.name }}</div>
+          <div class="menu-price">₦{{ dish.price }}</div>
+          <a
+            href="{% url 'events:product_detail' dish.id %}"
+            class="btn btn-dark btn-sm w-100"
+            >View</a
+          >
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- LOCAL DISHES -->
+    {% if local_dishes %}
+    <h4 class="text-white mt-4 mb-3">Local Dishes</h4>
+    <div class="menu-grid">
+      {% for dish in local_dishes %}
+      <div class="menu-card">
+        <div class="img-container">
+          <img
+            src="{% if dish.image %}{{ dish.image.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}"
+            class="menu-img"
+          />
+        </div>
+        <div class="menu-content">
+          <div class="menu-title">{{ dish.name }}</div>
+          <div class="menu-price">₦{{ dish.price }}</div>
+          <a
+            href="{% url 'events:product_detail' dish.id %}"
+            class="btn btn-dark btn-sm w-100"
+            >View</a
+          >
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endif %}
+  </div>
+
+  <div id="drinks-section" class="mt-5">
+    {% if drinks %}
+    <h2 class="text-white border-bottom pb-2 mb-4">Drinks</h2>
+    <div class="menu-grid">
+      {% for item in drinks %}
+      <div class="menu-card">
+        <div class="img-container">
+          <img
+            src="{% if item.image %}{{ item.image.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}"
+            class="menu-img"
+          />
+        </div>
+        <div class="menu-content">
+          <div class="menu-title">{{ item.name }}</div>
+          <div class="menu-price">₦{{ item.price }}</div>
+          <a
+            href="{% url 'events:product_detail' item.id %}"
+            class="btn btn-dark btn-sm w-100"
+            >View</a
+          >
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const hiddenItems = document.querySelectorAll(".menu-card, [data-aos]");
+    hiddenItems.forEach((item) => {
+      item.removeAttribute("data-aos");
+      item.style.opacity = "1";
+      item.style.visibility = "visible";
+    });
+
+    const mealsSection = document.getElementById("meals-section");
+    const drinksSection = document.getElementById("drinks-section");
+    const mealsBtn = document.getElementById("meals-btn");
+    const drinksBtn = document.getElementById("drinks-btn");
+
+    const toggleSection = (section) => {
+      if (section === "meals") {
+        mealsSection.style.display = "block";
+        drinksSection.style.display = "none";
+        mealsBtn.classList.add("btn-dark");
+        mealsBtn.classList.remove("btn-outline-dark");
+        drinksBtn.classList.add("btn-outline-dark");
+        drinksBtn.classList.remove("btn-dark");
+        mealsSection.scrollIntoView({ behavior: "smooth" });
+      } else if (section === "drinks") {
+        drinksSection.style.display = "block";
+        mealsSection.style.display = "none";
+        drinksBtn.classList.add("btn-dark");
+        drinksBtn.classList.remove("btn-outline-dark");
+        mealsBtn.classList.add("btn-outline-dark");
+        mealsBtn.classList.remove("btn-dark");
+        drinksSection.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+
+    mealsBtn.addEventListener("click", () => toggleSection("meals"));
+    drinksBtn.addEventListener("click", () => toggleSection("drinks"));
+  });
+</script>
+
+{% endblock %}

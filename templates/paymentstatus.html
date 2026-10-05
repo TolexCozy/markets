@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Payment status{% endblock title %}
+
+{% block body %}
+<div class="container mt-2">
+  <h1>Payment Status</h1>
+
+  <!-- Messages Section -->
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    <strong>{{ message }}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+
+  <div class="row">
+      <div class="col-md-4"></div>
+      <div class="col-md-6 my-4">
+          <div class="alert {% if status == 'Success' %}alert-success{% else %}alert-danger{% endif %} d-flex align-items-center" 
+              style="border-radius: 10px; border-left: 8px solid {% if status == 'Success' %}#198754{% else %}#dc3545{% endif %};">
+              
+              <div class="me-3">
+                  {% if status == 'Success' %}
+                      <span style="font-size: 3rem; color: #198754; font-weight: bold; line-height: 1;">&#10004;</span>
+                  {% else %}
+                      <span style="font-size: 3rem; color: #dc3545; font-weight: bold; line-height: 1;">&#10006;</span>
+                  {% endif %}
+              </div>
+
+              <div>
+                  <h3 class="mb-0" style="font-weight: 700;">PAYMENT {{ status|upper }}</h3>
+                  <small class="text-muted">Transaction Reference: {{ request.GET.reference }}</small>
+              </div>
+          </div>
+          
+          <div class="container mt-4 text-white">
+              {% if status == 'Success' %}
+                  <h2 class="text-success">Thank You!</h2>
+                  <p class="lead">Your payment was confirmed. We are now preparing your order.</p>
+                  <hr style="border-color: rgba(255,255,255,0.1);">
+                  <p><strong>Order ID:</strong> #{{ order_id }}</p>
+                  <p><strong>Amount Paid:</strong> ₦{{ amount }}</p>
+                  <a href="/" class="btn btn-outline-success mt-3">Continue Shopping</a>
+              {% else %}
+                  <h2 class="text-danger">Oops! Something went wrong.</h2>
+                  <p class="lead">The payment could not be verified or was declined.</p>
+                  <p>Reason: <span class="badge bg-danger">{{ status }}</span></p>
+                  <a href="/checkout" class="btn btn-outline-light mt-3">Try Again</a>
+              {% endif %}
+          </div>
+      </div>
+  </div>
+</div>
+{% endblock body %}

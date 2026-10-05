@@ -1,0 +1,101 @@
+{% extends "base.html" %} {% block title %}Checkout - Shop~LIFT{% endblock %}
+{%block body %}
+<div class="container mt-5 mb-5">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card shadow-sm p-4 mb-4">
+        <h3 class="mb-4">1. Delivery Information</h3>
+        <div class="mb-3">
+          <label for="address" class="form-label">Delivery Address</label>
+          <textarea
+            class="form-control"
+            id="address"
+            name="address"
+            rows="2"
+            placeholder="Enter your full house address or point of collection..."
+            required
+          ></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="delivery_note" class="form-label"
+            >Delivery Note (Optional)</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="delivery_note"
+            placeholder="e.g. Call me when you are at the gate"
+          />
+        </div>
+      </div>
+
+      <div class="card shadow-sm p-4">
+        <h3 class="mb-4">2. Review Items</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Price</th>
+              <th>Qty</th>
+              <th>Total</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in cart_items %}
+            <tr>
+              <td>{{ item.name }}</td>
+              <td>₦{{ item.price }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>₦{{ item.total_price }}</td>
+              <td>
+                <form
+                  method="post"
+                  action="{% url 'events:remove_from_cart' item.id %}"
+                >
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-danger">
+                    Remove
+                  </button>
+                </form>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5" class="text-center">No items in cart.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card shadow-sm p-4 bg-light">
+        <h4>Order Summary</h4>
+        <hr />
+        <div class="d-flex justify-content-between mb-2">
+          <span>Subtotal</span>
+          <span>₦{{ subtotal|floatformat:2 }}</span>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+          <span>Tax (3%)</span>
+          <span>₦{{ tax|floatformat:2 }}</span>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+          <span>Happiness</span>
+          <span class="text-success">Free</span>
+        </div>
+        <hr />
+        <div class="d-flex justify-content-between mb-3">
+          <span class="h5">Total</span>
+          <span class="h5 text-primary">₦{{ total|floatformat:2 }}</span>
+        </div>
+        <a href="{% url 'events:checkout' %}" class="btn btn-dark w-100 py-2"
+          >Proceed to Payout</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

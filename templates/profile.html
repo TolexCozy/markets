@@ -1,0 +1,54 @@
+{% extends "base.html" %} {% block title %}Profile Page{% endblock title %} 
+
+{%block body %}
+<section id="portfolio" class="portfolio section">
+  <div class="container">
+    <h1>My Profile</h1>
+    <table class="table table-info table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Order ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Products</th>
+          <th scope="col">Address</th>
+          <th scope="col">Phone Number</th>
+          <th scope="col">Amount Paid</th>
+          <th scope="col">Payment Status</th>
+          <th scope="col">Delivery</th>
+          <th scope="col">Delivery Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for data in order_data %} {% with i=data.order j=data.status %}
+        <tr>
+          <th scope="row">{{i.oid}}</th>
+          <td>{{i.name}}</td>
+          <td>{{i.items_json}}</td>
+          <td>{{i.amount}}</td>
+          <td>{{i.paymentstatus}}</td>
+          <td>{{i.address1}}</td>
+          <td>{{i.phone}}</td>
+          {% if j %}
+          <td>{{j.update_desc}}</td>
+          <td>{{j.delivered}}</td>
+          {% if j.delivered %}
+          <td><i class="fa-solid fa-circle-check">Delivered</i></td>
+          {% else %}
+          <td><i class="fa-solid fa-truck">Not Delivered</i></td>
+          {% endif %}
+          <td>{{j.timestamp}}</td>
+          {% else %}
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          {% endif %}
+        </tr>
+        {% endwith %} {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endblock body %}
+</section>
