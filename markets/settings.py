@@ -120,6 +120,9 @@ STORAGES = {
     },
 }
 
+# Tell WhiteNoise not to crash if a static file is missing
+WHITENOISE_MANIFEST_STRICT = False
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
